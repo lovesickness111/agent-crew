@@ -6,3 +6,12 @@ streamlit
 requests
 PyPDF2
 python-multipart
+python-pptx
+tavily-python
+dotenv
+langgraph
+langchain
+langchain-anthropic
+langchain-openai
+langchain_tavily
+langchain-google-genai

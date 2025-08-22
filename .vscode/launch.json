@@ -6,7 +6,7 @@
 //         "type": "python",
 //         "request": "launch",
 //         "module": "streamlit",
-//         "args": ["run", "app.py", "--logger.level=debug"],
+//         "args": ["run", "streamlit_pptx_app.py", "--logger.level=debug"],
 //         "console": "integratedTerminal"
 //       }
 //     ]

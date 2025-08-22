@@ -118,7 +118,7 @@ def event_stream(cv_text: str, job_description: str, criteria: List[EvaluationCr
         },
         {
             "role": "user", 
-            "content": "Hãy đánh giá CV này theo các tiêu chí đã được cung cấp."
+            "content": "Hãy đánh giá CV này theo các tiêu chí đã được cung cấp. Kết quả trả về chi cần Phần điểm và Kết luận, không cần giải thích thêm"
         }
     ]
     
@@ -223,7 +223,7 @@ def stream_response(request: MessageRequest):
         input_system = [
             {
                 "role": "system",
-                "content": "Bạn là một chuyên gia tuyển dụng và đánh giá CV. Hãy trả lời các câu hỏi liên quan đến tuyển dụng và đánh giá ứng viên một cách chuyên nghiệp."
+                "content": "Bạn là một chuyên gia tuyển dụng và đánh giá CV. Hãy trả lời các câu hỏi liên quan đến tuyển dụng và đánh giá ứng viên một cách chuyên nghiệp. Kết quả trả ra chỉ cần phần Kế Luận, Đánh giá mức độ phù hợp"
             }
         ]
         input_system.extend(request.input)

@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Phin Sữa Đá",
+        "description": "Một biểu tượng của cà phê Việt Nam, Phin Sữa Đá là sự hòa quyện hoàn hảo giữa vị cà phê phin đậm đà, thơm lừng và sữa đặc ngọt ngào, béo ngậy. Được phục vụ cùng đá mát lạnh, món đồ uống này mang đến trải nghiệm sảng khoái và đánh thức mọi giác quan, là lựa chọn lý tưởng cho những ai yêu thích hương vị cà phê truyền thống.",
+        "price": 35000.0
+    },
+    {
+        "name": "Bún Chả Hà Nội",
+        "description": "Bún chả Hà Nội là món ăn quen thuộc của người Việt. Món ăn bao gồm bún, chả thịt lợn nướng, ăn kèm bát nước mắm chua cay mặn ngọt.",
+        "price": 60000.0
+    },
+    {
+        "name": "Bánh phô mai",
+        "description": "Món tráng miệng kinh điển với lớp kem phô mai béo ngậy, mịn màng, tan chảy trong miệng, mang đến hương vị ngọt ngào tinh tế và khó quên.",
+        "price": 44000.0
+    }
+]
