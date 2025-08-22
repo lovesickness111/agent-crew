@@ -1,8 +1,56 @@
 import json
 from langchain_core.tools import tool
 from typing import List, Dict, Any
+from pydantic import BaseModel, Field
 
 MENU_FILE = "agents/restaurant_agent/menu.json"
+
+class AddDishInput(BaseModel):
+    """Input schema cho tool thêm món ăn"""
+    name: str = Field(description="Tên món ăn")
+    price: float = Field(description="Giá món ăn (VND)")
+    description: str = Field(description="Mô tả món ăn")
+    image_base64: str = Field(description="Hình ảnh base64 (có thể để trống)", default="")
+
+def _get_firebase_credentials():
+    """Load Firebase credentials từ file"""
+    try:
+        import json
+        import os
+        # Tính đường dẫn tương đối từ vị trí hiện tại lên root/firebase/
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        root_dir = os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
+        firebase_cred_path = os.path.join(root_dir, 'firebase', 'firebasecred.json')
+        
+        with open(firebase_cred_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"❌ Lỗi đọc firebasecred.json: {e}")
+        return None
+
+
+def _connect_firestore():
+    """Kết nối đến Firestore với minimal dependencies"""
+    try:
+        import firebase_admin
+        from firebase_admin import credentials, firestore
+        
+        # Load credentials
+        creds = _get_firebase_credentials()
+        if not creds:
+            return None
+        
+        # Initialize Firebase app nếu chưa có
+        if not firebase_admin._apps:
+            cred = credentials.Certificate(creds)
+            firebase_admin.initialize_app(cred)
+        
+        # Return Firestore client
+        return firestore.client()
+        
+    except Exception as e:
+        print(f"❌ Lỗi kết nối Firestore: {e}")
+        return None
 
 def load_menu() -> List[Dict[str, Any]]:
     """Tải thực đơn từ file JSON."""
@@ -28,8 +76,8 @@ def read_menu() -> str:
         return "Thực đơn hiện đang trống."
     return json.dumps(menu, indent=4, ensure_ascii=False)
 
-@tool
-def add_menu_item(name: str, description: str, price: float) -> str:
+@tool(args_schema=AddDishInput)
+def add_menu_item(name: str, description: str, price: float, image_base64: str) -> str:
     """
     Thêm một món ăn mới vào thực đơn.
     Sử dụng công cụ này khi người dùng muốn thêm một món ăn cụ thể.
@@ -37,6 +85,7 @@ def add_menu_item(name: str, description: str, price: float) -> str:
         name: Tên của món ăn.
         description: Mô tả chi tiết về món ăn.
         price: Giá của món ăn.
+        image_base64: Ảnh của món ăn.
     """
     menu = load_menu()
     # Kiểm tra xem món ăn đã tồn tại chưa
@@ -44,7 +93,24 @@ def add_menu_item(name: str, description: str, price: float) -> str:
         return f"Lỗi: Món ăn '{name}' đã tồn tại trong thực đơn."
     
     menu.append({"name": name, "description": description, "price": price})
-    save_menu(menu)
+    
+    # Kết nối Firestore
+    db = _connect_firestore()
+    if not db:
+        return "❌ Không thể kết nối Firebase Firestore!"
+    
+    # Tạo dữ liệu món ăn
+    dish_data = {
+        "name": name,
+        "price": price,
+        "description": description,
+        "image_base64": image_base64
+    }
+    
+    # Ghi vào Firestore
+    doc_ref = db.collection("InventoryItem").add(dish_data)
+    doc_id = doc_ref[1].id    
+
     return f"Đã thêm thành công món '{name}' vào thực đơn."
 
 @tool
