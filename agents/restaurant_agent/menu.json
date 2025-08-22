@@ -13,5 +13,10 @@
         "name": "Bánh phô mai",
         "description": "Món tráng miệng kinh điển với lớp kem phô mai béo ngậy, mịn màng, tan chảy trong miệng, mang đến hương vị ngọt ngào tinh tế và khó quên.",
         "price": 44000.0
+    },
+    {
+        "name": "Cà Phê Espresso Nóng",
+        "description": "Một tách Espresso nóng hổi, với lớp crema màu hổ phách quyến rũ và hương thơm nồng nồng nàn từ những hạt cà phê rang mộc chất lượng cao. Vị đậm đà, đắng nhẹ nhàng, mang đến trải nghiệm cà phê tinh túy, đánh thức mọi giác quan, hoàn hảo cho khởi đầu ngày mới hoặc những khoảnh khắc thư giãn.",
+        "price": 60000.0
     }
 ]

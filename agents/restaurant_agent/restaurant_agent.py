@@ -1,9 +1,9 @@
 import os
-from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_tavily import TavilySearch
 
 # Tải các biến môi trường từ tệp .env
+from dotenv import load_dotenv
 load_dotenv()
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
@@ -26,10 +26,10 @@ memory = MemorySaver()
 
 # 2. Thiết lập mô hình ngôn ngữ
 # Sử dụng Gemini 1.5 Flash làm bộ não cho agent
-# Yêu cầu có GOOGLE_API_KEY trong biến môi trường
-if "GOOGLE_API_KEY" not in os.environ:
-    raise ValueError("Biến môi trường GOOGLE_API_KEY chưa được thiết lập.")
-model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0, api_key=os.environ["GOOGLE_API_KEY"])
+# Yêu cầu có GEMINI_API_KEY trong biến môi trường
+if "GEMINI_API_KEY" not in os.environ:
+    raise ValueError("Biến môi trường GEMINI_API_KEY chưa được thiết lập.")
+model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0, api_key=os.environ["GEMINI_API_KEY"])
 
 # 3. Khởi tạo các công cụ
 # Công cụ tìm kiếm web

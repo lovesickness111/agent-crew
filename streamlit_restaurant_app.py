@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import uuid
 import os
+import base64
 
 # Cấu hình trang
 st.set_page_config(
@@ -118,9 +119,55 @@ def main():
 
                 if api_response and "response" in api_response:
                     response_text = api_response["response"]
-                    st.markdown(response_text)
-                    # Thêm phản hồi của agent vào lịch sử
-                    st.session_state.messages.append({"role": "assistant", "content": response_text})
+                    
+                    # Kiểm tra xem phản hồi có phải là đường dẫn ảnh không
+                    if "image" in response_text and "temp_uploads" in response_text:
+                        image_path = response_text.split(":", 1)[1]
+                        try:
+                            if os.path.exists(image_path):
+                                # Đọc ảnh dưới dạng bytes để lưu vào lịch sử và hiển thị
+                                with open(image_path, "rb") as f:
+                                    image_bytes = f.read()
+                                
+                                st.image(image_bytes, caption="Ảnh do AI tạo", width=300)
+                                
+                                # Thêm vào lịch sử với cả text và ảnh
+                                assistant_message = {
+                                    "role": "assistant",
+                                    "content": f"Đây là hình ảnh tôi đã tạo cho bạn. Bạn có thể tìm thấy nó tại: `{image_path}`",
+                                    "image_bytes": image_bytes
+                                }
+                                st.session_state.messages.append(assistant_message)
+                            else:
+                                error_msg = f"Lỗi: Không tìm thấy file ảnh tại '{image_path}'"
+                                st.error(error_msg)
+                                st.session_state.messages.append({"role": "assistant", "content": error_msg})
+                        except Exception as e:
+                            error_msg = f"Lỗi khi hiển thị ảnh: {e}"
+                            st.error(error_msg)
+                            st.session_state.messages.append({"role": "assistant", "content": error_msg})
+                    if "video" in response_text and "temp_uploads" in response_text:
+                        video_path = response_text.split(":", 1)[1]
+                        try:
+                            if os.path.exists(video_path):
+                                st.video(video_path)
+                                assistant_message = {
+                                    "role": "assistant",
+                                    "content": f"Đây là video tôi đã tạo cho bạn. Bạn có thể tìm thấy nó tại: `{video_path}`"
+                                }
+                                st.session_state.messages.append(assistant_message)
+                            else:
+                                error_msg = f"Lỗi: Không tìm thấy file video tại '{video_path}'"
+                                st.error(error_msg)
+                                st.session_state.messages.append({"role": "assistant", "content": error_msg})
+                        except Exception as e:
+                            error_msg = f"Lỗi khi hiển thị video: {e}"
+                            st.error(error_msg)
+                            st.session_state.messages.append({"role": "assistant", "content": error_msg})
+                    else:
+                        # Xử lý như tin nhắn văn bản bình thường
+                        st.markdown(response_text)
+                        st.session_state.messages.append({"role": "assistant", "content": response_text})
                 else:
                     st.error("Không nhận được phản hồi hợp lệ từ agent.")
 
