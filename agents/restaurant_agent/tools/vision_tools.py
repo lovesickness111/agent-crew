@@ -10,8 +10,8 @@ from langchain_core.messages import HumanMessage
 load_dotenv()
 
 # Khởi tạo mô hình Gemini
-# Hãy chắc chắn rằng bạn đã đặt biến môi trường GOOGLE_API_KEY
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", api_key=os.environ["GOOGLE_API_KEY"])
+# Hãy chắc chắn rằng bạn đã đặt biến môi trường GEMINI_API_KEY
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", api_key=os.environ["GEMINI_API_KEY"])
 
 def image_to_base64(image_path: str) -> str:
     """Chuyển đổi file ảnh sang định dạng base64."""
